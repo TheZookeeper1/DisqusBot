@@ -1,0 +1,76 @@
+import requests
+import random
+import concurrent.futures
+
+
+times_upvoted = 0
+
+#20 accounts 
+accounts = ["4f58455a-4cd2-11ed-ac99-120c0a7014db",
+"a1d34492-4cd2-11ed-93fc-120c0a7014db",
+"d1991580-4cd2-11ed-b584-0ac09e1925db", 
+"024453fc-4cd3-11ed-93fc-120c0a7014db",
+"27bf03c0-4cd3-11ed-a3cf-120c0a7014db", 
+"4f835af0-4cd3-11ed-a184-0ac09e1925db", 
+"7b90a1fc-4cd3-11ed-b584-0ac09e1925db",
+"ab9eae84-4cd3-11ed-ae60-120c0a7014db",
+"de8d5da4-4cd3-11ed-967c-0ac09e1925db",
+"0a370c3e-4cd4-11ed-978c-0ac09e1925db",
+"537ce66a-4cd5-11ed-967c-0ac09e1925db",
+"953d049a-4cd5-11ed-9e0e-120c0a7014db",
+"d0c91468-4cd5-11ed-a184-0ac09e1925db",
+"2caec32c-4cd6-11ed-93fc-120c0a7014db", 
+"5886e646-4cd6-11ed-853f-0ac09e1925db", 
+"81edeaac-4cd6-11ed-a634-0ac09e1925db", 
+"baedf7c0-4cd6-11ed-978c-0ac09e1925db", 
+"ea4c4486-4cd6-11ed-a3cf-120c0a7014db", 
+"14eee0f4-4cd7-11ed-9e0e-120c0a7014db", 
+"4032c0b4-4cd7-11ed-b685-120c0a7014db",]
+
+vote_url = "https://disqus.com/api/3.0/posts/vote.json"
+
+data = dict(post = "6047492015", # hover of share and copy and paste the link and copy the number at the end starting with 6 in it for specific comment
+                        vote = "1", #for voting # change to -1 for downvotes
+                        api_key = "E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F")
+                        
+ip_adresses = ["http://hsazltdj-rotate:0trbi5zr1fg4@p.webshare.io:80/", 
+                "http://jaqcotoi-rotate:k71p2ge1hrhh@p.webshare.io:80/", 
+                "http://hsazltdj-rotate:0trbi5zr1fg4@p.webshare.io:80/",
+                "http://einajelw-rotate:2pyxhse2ngzu@p.webshare.io:80/",
+                "http://peodztvw-rotate:2wswl1km7pav@p.webshare.io:80/",
+                "http://jaqcotoi-rotate:k71p2ge1hrhh@p.webshare.io:80/",
+                "http://einajelw-rotate:2pyxhse2ngzu@p.webshare.io:80/",
+                "http://peodztvw-rotate:2wswl1km7pav@p.webshare.io:80/"]
+                
+def upvote(vote):
+    global times_upvoted
+    while times_upvoted < len(accounts):
+        i = 1
+        try:
+            proxy_index = random.randint(0, len(ip_adresses) - 1) 
+            proxies={
+            "http": ip_adresses[proxy_index],
+            "https": ip_adresses[proxy_index],
+            "http": ip_adresses[proxy_index],
+            "https": ip_adresses[proxy_index],
+            "http": ip_adresses[proxy_index],
+            "https": ip_adresses[proxy_index],
+            "http": ip_adresses[proxy_index],
+            "https": ip_adresses[proxy_index]
+            }
+
+            r = requests.post(vote_url, data=data, headers={"X-Sessionid": vote}, proxies=proxies)
+            
+            if r.status_code == 200:
+                times_upvoted += 1
+                print("Total votes on post: ")
+                print(times_upvoted)
+                break
+            else:
+                print("Couldn't upvote")
+                break
+        except:
+           pass
+           
+with concurrent.futures.ThreadPoolExecutor() as exector:
+    exector.map(upvote, accounts)
